@@ -14,7 +14,7 @@ export const js = () =>
         })
       )
     )
-    // .pipe(webpack({ config: webpackConfig(app.build.default) }))
+    .pipe(webpack({ config: webpackConfig(app.build.default) }))
     .pipe(app.plugins.flatten({ includeParents: 0 }))
     .pipe(app.gulp.dest(app.path.build.js))
     .pipe(app.plugins.browserSync.stream());

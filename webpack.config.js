@@ -21,13 +21,12 @@ const getPageEntries = () => {
       `${pagesPath}/${page}/styles/js/${page}.js`
     );
 
+    // Проверяем, существует ли файл index.js для страницы
     if (fs.existsSync(indexPath)) {
-      // Проверяем, существует ли файл index.js для страницы
       pageEntries[pageName] = indexPath;
     }
   });
 
-  console.log(pageEntries);
   return pageEntries;
 };
 

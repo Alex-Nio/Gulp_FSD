@@ -32,7 +32,7 @@ export const path = {
     pages: {
       html: `${layers.pages}/**/*.html`,
       scss: `${layers.pages}/**/styles/scss/*.scss`,
-      js: `${layers.pages}/**/styles/js/index.js`,
+      js: `${layers.pages}/**/styles/js/*.js`,
     },
     //* Widgets
     widgets: `${layers.widgets}/**/*.html`,
@@ -54,7 +54,7 @@ export const path = {
     pages: {
       html: `${layers.pages}/**/*.html`,
       scss: `${layers.pages}/**/styles/scss/*.scss`,
-      js: `${layers.pages}/**/styles/js/index.js`,
+      js: `${layers.pages}/**/styles/js/*.js`,
     },
     //* Widgets
     widgets: `${layers.widgets}/**/*.html`,
