@@ -1,5 +1,4 @@
 /* eslint-disable */
-import webp from 'gulp-webp';
 import { logger } from './../core/logger.js';
 
 export const images = (done) => {
@@ -14,7 +13,7 @@ export const images = (done) => {
         })
       )
     )
-    .pipe(app.plugins.if(app.build.max, webp()))
+    .pipe(app.plugins.if(app.build.max, app.plugins.webp()))
     .pipe(app.plugins.if(app.build.max, app.gulp.dest(app.path.build.images)))
     .pipe(
       app.plugins.if(
