@@ -1,0 +1,82 @@
+/*
+? Команды сборщика. Подробнее в документации, раздел "Команды".
+*================================================================
+gulp
+gulp build
+gulp build --max
+gulp build --optimized
+gulp build --min
+gulp create-page --name page
+gulp create-component --name my-component
+gulp create-component --name my-component --page page-name
+gulp removeEmpty
+*================================================================
+*/
+
+//? Основные цвета
+$main: #c0bcbc;
+$black: #2a2d32;
+$white: #ffffff;
+
+//? Состояния
+// $normal: #0a615c;
+$hover: #1253b5;
+// $active: #0a615c;
+// $error: #ea6852;
+// $disabled: ;
+
+//? Состояния текста
+// $default-text: ;
+// $hover-text: ;
+// $active-text: ;
+// $disabled-text: ;
+
+//? Фоны
+// $header-top-bg: #303332;
+// $header-bottom-bg: #242625;
+// $cookies-bg: #5887da;
+// $footer-bg: #242625;
+
+//? Размер иконок
+$icon-fz-small: 20px;
+$icon-fz-medium: 24px;
+$icon-fz-large: 34px;
+
+//? Border-radius
+$default-br: 5px;
+
+//? Z-index
+$header-z-index: 55;
+
+//? По умолчанию
+$base_fz: 16px; //? Размер шрифта по умолчанию 16px
+$base_ff: 'ubuntu-regular', sans-serif; //? Шрифт по умолчанию
+$base_hover: $hover; //? Цвет hover по умолчанию
+$base_bg: $main; //? Цвет фона по умолчанию
+$base_color: $black; //? Цвет текста по умолчанию
+
+//! Направление right-to-left или left-to-right
+// $web-direction: rtl;
+$web-direction: ltr;
+
+//? Переменные семейств шрифтов
+$ff_Ur: 'ubuntu-regular', sans-serif;
+$ff_Um: 'ubuntu-medium', sans-serif;
+$ff_Ub: 'ubuntu-bold', sans-serif;
+$ff_Rr: 'roboto-regular', sans-serif;
+$ff_Msb: 'manrope-semibold', sans-serif;
+
+//? Стиль шрифтов
+$I: italic;
+$O: oblique;
+
+//? Толщина семейства шрифтов
+$th: 100; // Thin
+$el: 200; // Extra Light
+$l: 300; // Light
+$r: 400; // Regular
+$m: 500; // Medium
+$sb: 600; // SemiBold
+$b: 700; // Bold
+$eb: 800; // Extra Bold
+$bl: 900; // Super

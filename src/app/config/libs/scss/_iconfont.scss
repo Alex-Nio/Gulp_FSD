@@ -1,0 +1,232 @@
+@font-face {
+  font-family: 'iconfont';
+  src: url('../fonts/iconfont.eot');
+  src: url('../fonts/iconfont.eot') format('embedded-opentype'),
+    url('../fonts/iconfont.woff') format('woff'),
+    url('../fonts/iconfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^='icon-']:before,
+[class*=' icon-']:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'iconfont' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// TODO: занести сюда country icons
+// .country-icon {
+//   display: inline-block;
+//   width: 24px;
+//   min-width: 24px;
+//   height: 24px;
+//   min-height: 24px;
+
+//   &.russia {
+//     background: url('../images/main/dropdown/russia.svg');
+//   }
+//   &.israel {
+//     background: url('../images/main/dropdown/israel.svg');
+//   }
+//   &.turkey {
+//     background: url('../images/main/dropdown/turkey.svg');
+//   }
+//   &.uk {
+//     background: url('../images/main/dropdown/uk.svg');
+//   }
+// }
+
+.icon-degree44px:before {
+  content: '\e900';
+}
+.icon-comment16px:before {
+  content: '\e901';
+}
+.icon-delete16px:before {
+  content: '\e902';
+}
+.icon-edit-write16px:before {
+  content: '\e903';
+}
+.icon-exit16px:before {
+  content: '\e904';
+}
+.icon-filters16px:before {
+  content: '\e905';
+}
+.icon-lock16px:before {
+  content: '\e906';
+}
+.icon-star-default16px:before {
+  content: '\e907';
+}
+.icon-star-filled16px:before {
+  content: '\e908';
+}
+.icon-star-half16px:before {
+  content: '\e909';
+}
+.icon-views16px:before {
+  content: '\e90a';
+}
+.icon-add19px:before {
+  content: '\e90b';
+}
+.icon-arrow-answer19px:before {
+  content: '\e90c';
+}
+.icon-arrow-down19px:before {
+  content: '\e90d';
+}
+.icon-arrow-left19px:before {
+  content: '\e90e';
+}
+.icon-arrow-right19px:before {
+  content: '\e90f';
+}
+.icon-arrow-up19px:before {
+  content: '\e910';
+}
+.icon-card19px:before {
+  content: '\e911';
+}
+.icon-cart19px:before {
+  content: '\e912';
+}
+.icon-check19px:before {
+  content: '\e913';
+}
+.icon-comment19px:before {
+  content: '\e914';
+}
+.icon-comparison19px:before {
+  content: '\e915';
+}
+.icon-cross19px:before {
+  content: '\e916';
+}
+.icon-delete19px:before {
+  content: '\e917';
+}
+.icon-download19px:before {
+  content: '\e918';
+}
+.icon-favorites-default19px:before {
+  content: '\e919';
+}
+.icon-favorites-filled19px:before {
+  content: '\e91a';
+}
+.icon-filters19px:before {
+  content: '\e91b';
+}
+.icon-geolocation19px:before {
+  content: '\e91c';
+}
+.icon-gift19px:before {
+  content: '\e91d';
+}
+.icon-home19px:before {
+  content: '\e91e';
+}
+.icon-like19px:before {
+  content: '\e91f';
+}
+.icon-list19px:before {
+  content: '\e920';
+}
+.icon-logo19px:before {
+  content: '\e921';
+}
+.icon-menu19px:before {
+  content: '\e922';
+}
+.icon-minus19px:before {
+  content: '\e923';
+}
+.icon-more19px:before {
+  content: '\e924';
+}
+.icon-phone19px:before {
+  content: '\e925';
+}
+.icon-plus19px:before {
+  content: '\e926';
+}
+.icon-profile19px:before {
+  content: '\e927';
+}
+.icon-questionmark19px:before {
+  content: '\e928';
+}
+.icon-search19px:before {
+  content: '\e929';
+}
+.icon-sort19px:before {
+  content: '\e92a';
+}
+.icon-star-filled19px:before {
+  content: '\e92b';
+}
+.icon-star-half19px:before {
+  content: '\e92c';
+}
+.icon-start-default19px:before {
+  content: '\e92d';
+}
+.icon-views19px:before {
+  content: '\e92e';
+}
+.icon-accessories22px:before {
+  content: '\e92f';
+}
+.icon-cacheback22px:before {
+  content: '\e930';
+}
+.icon-car22px:before {
+  content: '\e931';
+}
+.icon-combo-devices22px:before {
+  content: '\e932';
+}
+.icon-dvr22px:before {
+  content: '\e933';
+}
+.icon-electronics22px:before {
+  content: '\e934';
+}
+.icon-gift22px:before {
+  content: '\e935';
+}
+.icon-memory-card22px:before {
+  content: '\e936';
+}
+.icon-radar-detectors22px:before {
+  content: '\e937';
+}
+.icon-sale22px:before {
+  content: '\e938';
+}
+.icon-delivery32px:before {
+  content: '\e939';
+}
+.icon-guarantee32px:before {
+  content: '\e93a';
+}
+.icon-promotion32px:before {
+  content: '\e93b';
+}
+.icon-loud32px:before {
+  content: '\e93c';
+}

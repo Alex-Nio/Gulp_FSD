@@ -1,0 +1,163 @@
+{
+  "forms": [
+    {
+      "id": "feedback-form",
+      "submitDatasetId": "feedback-form-submit",
+      "fields": [
+        {
+          "id": "1",
+          "inputId": "feedback-form-model",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "2",
+          "inputId": "form-search-input",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "3",
+          "inputId": "feedback-form-name",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": "^[A-Za-zА-Яа-я]+$"
+        },
+        {
+          "id": "4",
+          "inputId": "feedback-form-mail",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
+        },
+        {
+          "id": "5",
+          "inputId": "feedback-form-attach",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+.(jpeg|png|gif|webp|jpg|pdf)$"
+        },
+        {
+          "id": "6",
+          "inputId": "feedback-form-message",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "7",
+          "inputId": "feedback-form-checkbox",
+          "inputType": "checkbox",
+          "valueType": "",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ""
+        }
+      ]
+    },
+    {
+      "id": "remind-form",
+      "submitDatasetId": "remind-form-submit",
+      "fields": [
+        {
+          "id": "1",
+          "inputId": "remind-form-name",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": "^[A-Za-zА-Яа-я]+$"
+        },
+        {
+          "id": "2",
+          "inputId": "remind-form-mail",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
+        },
+        {
+          "id": "3",
+          "inputId": "form-search-input",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "4",
+          "inputId": "remind-form-phone",
+          "inputType": "tel",
+          "countryCode": "+7",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "5",
+          "inputId": "remind-form-checkbox",
+          "inputType": "checkbox",
+          "valueType": "",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ""
+        }
+      ]
+    },
+    {
+      "id": "order-form",
+      "submitDatasetId": "order-form-submit",
+      "fields": [
+        {
+          "id": "1",
+          "inputId": "order-number",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        },
+        {
+          "id": "2",
+          "inputId": "order-phone",
+          "inputType": "text",
+          "valueType": "string",
+          "isRequired": true,
+          "defaultValue": "",
+          "errorMessage": "Текст ошибки",
+          "regex": ".+"
+        }
+      ]
+    }
+  ]
+}
