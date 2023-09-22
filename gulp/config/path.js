@@ -35,7 +35,11 @@ export const path = {
       js: `${layers.pages}/**/styles/js/*.js`,
     },
     //* Widgets
-    widgets: `${layers.widgets}/**/*.html`,
+    widgets: {
+      html: `${layers.widgets}/**/*.html`,
+      scss: `${layers.widgets}/**/*.scss`,
+      js: `${layers.widgets}/**/*.js`,
+    },
     //* Features
     features: `${layers.features}/**/*.js`,
     //* Shared
@@ -57,7 +61,11 @@ export const path = {
       js: `${layers.pages}/**/styles/js/*.js`,
     },
     //* Widgets
-    widgets: `${layers.widgets}/**/*.html`,
+    widgets: {
+      html: `${layers.widgets}/**/*.html`,
+      scss: `${layers.widgets}/**/*.scss`,
+      js: `${layers.widgets}/**/*.js`,
+    },
     //* Features
     features: `${layers.features}/**/*.js`,
     //* Shared

@@ -7,8 +7,9 @@ export const html = () => {
   return app.gulp
     .src(app.path.src.pages.html)
     .pipe(app.plugins.newer(app.path.src.pages.html))
-    .pipe(app.plugins.newer(app.path.src.widgets))
+    .pipe(app.plugins.newer(app.path.src.widgets.html))
     .pipe(app.plugins.newer(app.path.src.shared.ui))
+    .pipe(app.plugins.gulpCached('html'))
     .pipe(
       app.plugins.plumber(
         app.plugins.notify.onError({

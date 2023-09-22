@@ -1,6 +1,9 @@
 import gulp from 'gulp'; // Основной модуль
 import { path } from './gulp/config/path.js'; // Импорт путей
 import { plugins } from './gulp/config/plugins.js'; // Импорт общих плагинов
+import watch from 'gulp-watch'; // Импортируйте gulp-watch
+import changed from 'gulp-changed';
+import notify from 'gulp-notify';
 
 const outOfKey =
   !process.argv.includes('--max') &&
@@ -43,11 +46,19 @@ import { linter } from './gulp/tasks/core/linter.js';
 
 // import { zip } from './gulp/tasks/zip.js'; // TODO: тестирование
 // import { ftp } from './gulp/tasks/ftp.js'; // TODO: тестирование
+import { findWidgetNames } from './gulp/tasks/styles/widgets.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
   gulp.watch(path.watch.pages.html, html);
-  gulp.watch(path.watch.widgets, html);
+  //Test
+  gulp.watch(path.watch.widgets.html, findWidgetNames);
+  gulp.watch(path.watch.widgets.scss, findWidgetNames);
+  gulp.watch(path.watch.widgets.js, findWidgetNames);
+  // gulp.watch(path.watch.widgets.scss, findFile, findWidgetNames);
+  // gulp.watch(path.watch.widgets.js, findFile, findWidgetNames);
+  // gulp.watch(path.watch.pages.js, compilePageHTMLForWidget);
+  // gulp.watch(path.watch.widgets, extractImports);
   gulp.watch(path.watch.shared.ui, html);
   gulp.watch(path.watch.app, gulp.parallel(scss, json));
   gulp.watch(path.watch.pages.scss, scss);
@@ -55,6 +66,7 @@ function watcher() {
 }
 
 // export { svgSprive };
+// Отслеживаем изменения в файлах виджетов
 
 // Последовательная обработка шрифтов
 const fontsCopy = gulp.series(ttfToWoff, ttfToWoff2, iconFont, (done) => {

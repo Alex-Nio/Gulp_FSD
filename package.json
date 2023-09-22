@@ -96,7 +96,10 @@
   },
   "dependencies": {
     "gulp-cached": "^1.1.1",
+    "gulp-changed": "^4.0.3",
     "gulp-size": "^4.0.1",
-    "swiper": "^10.1.0"
+    "gulp-watch": "^5.0.1",
+    "swiper": "^10.1.0",
+    "through2": "^4.0.2"
   }
 }

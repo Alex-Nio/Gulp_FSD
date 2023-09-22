@@ -17,10 +17,14 @@ import webpHtmlNosvg from 'gulp-webp-html-nosvg';
 import webp from 'gulp-webp';
 import versionNumber from 'gulp-version-number';
 import htmlMin from 'gulp-htmlmin';
+import gulpCached from 'gulp-cached';
+import through2 from 'through2';
 import { logger } from './../tasks/core/logger.js';
 
 export const plugins = {
+  through2: through2,
   logger: logger,
+  gulpCached: gulpCached,
   groupCssMediaQueries: groupCssMediaQueries,
   rename: rename,
   webpcss: webpcss,
