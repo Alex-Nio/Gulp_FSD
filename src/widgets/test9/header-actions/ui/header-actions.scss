@@ -1,0 +1,21 @@
+$black: #000;
+
+.header-actions {
+  // .header-actions__inner
+  &__inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0px;
+    background-color: teal;
+    color: white;
+    gap: 40px;
+  }
+
+  // .header-actions__btn
+  &__btn {
+    background-color: $black;
+    color: teal;
+    font-size: 22px;
+  }
+}

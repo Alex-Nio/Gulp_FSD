@@ -46,19 +46,20 @@ import { linter } from './gulp/tasks/core/linter.js';
 
 // import { zip } from './gulp/tasks/zip.js'; // TODO: тестирование
 // import { ftp } from './gulp/tasks/ftp.js'; // TODO: тестирование
-import { findWidgetNames } from './gulp/tasks/styles/widgets.js';
+import {
+  findWidgetHtml,
+  findWidgetScss,
+  findWidgetJs,
+} from './gulp/tasks/styles/widgets.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
   gulp.watch(path.watch.pages.html, html);
   //Test
-  gulp.watch(path.watch.widgets.html, findWidgetNames);
-  gulp.watch(path.watch.widgets.scss, findWidgetNames);
-  gulp.watch(path.watch.widgets.js, findWidgetNames);
-  // gulp.watch(path.watch.widgets.scss, findFile, findWidgetNames);
-  // gulp.watch(path.watch.widgets.js, findFile, findWidgetNames);
-  // gulp.watch(path.watch.pages.js, compilePageHTMLForWidget);
-  // gulp.watch(path.watch.widgets, extractImports);
+  gulp.watch(path.watch.widgets.html, findWidgetHtml);
+  gulp.watch(path.watch.widgets.scss, findWidgetScss);
+  gulp.watch(path.watch.widgets.js, findWidgetJs);
+  //
   gulp.watch(path.watch.shared.ui, html);
   gulp.watch(path.watch.app, gulp.parallel(scss, json));
   gulp.watch(path.watch.pages.scss, scss);
