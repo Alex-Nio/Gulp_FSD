@@ -1,9 +1,6 @@
 import gulp from 'gulp'; // Основной модуль
 import { path } from './gulp/config/path.js'; // Импорт путей
 import { plugins } from './gulp/config/plugins.js'; // Импорт общих плагинов
-import watch from 'gulp-watch'; // Импортируйте gulp-watch
-import changed from 'gulp-changed';
-import notify from 'gulp-notify';
 
 const outOfKey =
   !process.argv.includes('--max') &&
@@ -23,51 +20,50 @@ global.app = {
   plugins: plugins,
 };
 
-// Импорт задач
+//? Default
+import { html } from './gulp/tasks/styles/default/html.js';
+import { scss } from './gulp/tasks/styles/default/scss.js';
+import { images } from './gulp/tasks/styles/default/images.js';
+import {
+  ttfToWoff,
+  ttfToWoff2,
+  iconFont,
+} from './gulp/tasks/styles/default/fonts.js';
 
-// Styles
-import { html } from './gulp/tasks/styles/html.js';
-import { scss } from './gulp/tasks/styles/scss.js';
-import { images } from './gulp/tasks/styles/images.js';
-import { ttfToWoff, ttfToWoff2, iconFont } from './gulp/tasks/styles/fonts.js';
-import { json } from './gulp/tasks/styles/json.js';
-import { js } from './gulp/tasks/styles/js.js';
-// import { svgSprive } from './gulp/tasks/styles/svgSprive.js';
-// Components
-// import { createComponent } from './gulp/tasks/components/createComponent.js';
-// import { cleanComponents } from './gulp/tasks/components/cleanComponents.js';
-// Custom
-// import { createPage } from './gulp/tasks/custom/createPage.js';
-import { logger } from './gulp/tasks/core/logger.js';
-// Other
+import { json } from './gulp/tasks/styles/default/json.js';
+import { js } from './gulp/tasks/styles/default/js.js';
+
+//? Core
 import { clean } from './gulp/tasks/core/clean.js';
-import { server } from './gulp/tasks/core/server.js';
+import { logger } from './gulp/tasks/core/logger.js';
 import { linter } from './gulp/tasks/core/linter.js';
+import { server } from './gulp/tasks/core/server.js';
 
-// import { zip } from './gulp/tasks/zip.js'; // TODO: тестирование
-// import { ftp } from './gulp/tasks/ftp.js'; // TODO: тестирование
+//? Widgets
 import {
   findWidgetHtml,
   findWidgetScss,
   findWidgetJs,
-} from './gulp/tasks/styles/widgets.js';
+} from './gulp/tasks/styles/widgets/widgets.js';
+
+// TODO: add
+// import { zip } from './gulp/tasks/zip.js';
+// import { ftp } from './gulp/tasks/ftp.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
   gulp.watch(path.watch.pages.html, html);
-  //Test
   gulp.watch(path.watch.widgets.html, findWidgetHtml);
   gulp.watch(path.watch.widgets.scss, findWidgetScss);
   gulp.watch(path.watch.widgets.js, findWidgetJs);
+  //Test
+
   //
   gulp.watch(path.watch.shared.ui, html);
   gulp.watch(path.watch.app, gulp.parallel(scss, json));
   gulp.watch(path.watch.pages.scss, scss);
   gulp.watch(path.watch.pages.js, js);
 }
-
-// export { svgSprive };
-// Отслеживаем изменения в файлах виджетов
 
 // Последовательная обработка шрифтов
 const fontsCopy = gulp.series(ttfToWoff, ttfToWoff2, iconFont, (done) => {
@@ -84,7 +80,7 @@ const mainTasks = gulp.series(
 //* Development
 const dev = gulp.series(
   (done) => {
-    logger('start'); // Вызываем logger с аргументом 'start'
+    logger('start');
     done();
   },
   clean,
@@ -97,34 +93,11 @@ const dev = gulp.series(
 );
 
 const build = gulp.series(clean, gulp.parallel(mainTasks));
-// const removeEmpty = gulp.series(cleanComponents);
-// const deployZIP = gulp.series(clean, mainTasks, zip); // TODO: тестирование
-// const deployFTP = gulp.series(clean, mainTasks, ftp); // TODO: тестирование
 
 // Экспорт сценариев
 export { dev };
 export { build };
-// export { removeEmpty };
-// export { deployZIP }; // TODO: тестирование
-// export { deployFTP }; // TODO: тестирование
 
 // Выполнение сценария по умолчанию
 gulp.task('default', dev);
-
-/*
-
-  *Создание компонента по команде: gulp create-component --name my-component
-  *Примечание: my-component - это имя компонента, которое вы хотите создать
-
- */
-
-// gulp.task('create-component', createComponent);
-
-/*
-
-  *Создание компонента по команде: gulp create-page --name page
-  *Примечание: page - это имя файла страницы, которое вы хотите создать
-
-*/
-
-// gulp.task('create-page', createPage);
+gulp.task('build', build);

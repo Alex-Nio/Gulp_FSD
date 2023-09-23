@@ -3,12 +3,11 @@ import path from 'path';
 import * as glob from 'glob';
 import fs from 'fs';
 import webpack from 'webpack-stream';
-import { webpackConfig } from './../../../webpack.config.js';
+import { webpackConfig } from './../../../../webpack.config.js';
 import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 
 const sass = gulpSass(dartSass);
-
 const __dirname = path.resolve();
 
 function reloadBrowser() {

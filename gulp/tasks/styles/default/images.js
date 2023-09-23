@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { logger } from './../core/logger.js';
+import { logger } from './../../core/logger.js';
 
 export const images = (done) => {
   return app.gulp

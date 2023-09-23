@@ -1,6 +1,6 @@
 /* eslint-disable */
 import webpack from 'webpack-stream';
-import { webpackConfig } from '../../../webpack.config.js';
+import { webpackConfig } from '../../../../webpack.config.js';
 
 export const js = () =>
   app.gulp
