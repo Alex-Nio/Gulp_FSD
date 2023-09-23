@@ -267,6 +267,7 @@ export const findWidgetScss = () => {
         `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
       );
 
+      // scss compile
       currentChangedWidget.forEach((name) => {
         let pageNames = findKeysWithName(pages, name);
 
@@ -318,6 +319,39 @@ export const findWidgetScss = () => {
           );
         });
       });
+
+      // js compile
+      currentChangedWidget.forEach((name) => {
+        let pageNames = findKeysWithName(pages, name);
+
+        pageNames.forEach((pageName) => {
+          let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
+          console.log(pageFilePath);
+
+          app.gulp
+            .src(pageFilePath, { sourcemaps: app.build.default })
+            .pipe(
+              app.plugins.plumber(
+                app.plugins.notify.onError({
+                  title: 'JS',
+                  message: 'Error: <%= error.message %>',
+                })
+              )
+            )
+            .pipe(
+              webpack({
+                config: webpackConfig(app.build.default, pageFilePath),
+              })
+            )
+            .pipe(app.plugins.flatten({ includeParents: 0 }))
+            .pipe(app.gulp.dest(app.path.build.js))
+            .pipe(app.plugins.browserSync.stream());
+        });
+      });
+    })
+    .on('end', () => {
+      console.log('end');
+      reloadBrowser();
     });
 };
 
@@ -421,12 +455,20 @@ export const findWidgetJs = () => {
                 })
               )
             )
-            .pipe(webpack({ config: webpackConfig(app.build.default) }))
+            .pipe(
+              webpack({
+                config: webpackConfig(app.build.default, pageFilePath),
+              })
+            )
             .pipe(app.plugins.flatten({ includeParents: 0 }))
             .pipe(app.gulp.dest(app.path.build.js))
             .pipe(app.plugins.browserSync.stream());
         });
       });
+    })
+    .on('end', () => {
+      console.log('end');
+      reloadBrowser();
     });
 };
 

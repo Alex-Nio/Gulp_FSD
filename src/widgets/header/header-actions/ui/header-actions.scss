@@ -1,21 +1,28 @@
-$black: #000;
+@import './../helpers/vars.scss';
+@import './../helpers/mixins.scss';
 
 .header-actions {
   // .header-actions__inner
   &__inner {
     display: flex;
-    justify-content: start;
     align-items: center;
-    padding: 15px 0px;
-    background-color: #cac6a7;
-    color: white;
-    gap: 40px;
+    gap: 10px;
+    margin: 0 20px;
   }
 
   // .header-actions__btn
   &__btn {
+    color: $white;
     background-color: $black;
-    color: teal;
-    font-size: 22px;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    @include defaultTransition;
+
+    &:hover {
+      background-color: teal;
+      color: orange;
+      @include defaultTransition;
+    }
   }
 }

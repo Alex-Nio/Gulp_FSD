@@ -1,6 +1,19 @@
+@import './../helpers/vars.scss';
+@import './../helpers/mixins.scss';
+
 .cart-btn {
   padding: 10px 25px;
-  font-size: 32px;
-  color: white;
-  background-color: black;
+  font-size: 18px;
+  color: $white;
+  background-color: blue;
+  align-self: flex-end;
+  border-radius: 5px;
+  margin: 0 auto;
+  @include defaultTransition;
+
+  &:hover {
+    background-color: $black;
+    color: $white;
+    @include defaultTransition;
+  }
 }

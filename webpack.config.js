@@ -10,29 +10,45 @@ const path = {
   build: pathNode.resolve(buildFolder),
 };
 
-const getPageEntries = () => {
+const getPageEntries = (pageFilePath) => {
+  const pageEntries = {};
   const pagesPath = pathNode.resolve(`${path.src}/pages/`);
   const pages = fs.readdirSync(pagesPath);
-  const pageEntries = {};
 
-  pages.forEach((page) => {
-    const pageName = page;
-    const indexPath = pathNode.resolve(
-      `${pagesPath}/${page}/styles/js/${page}.js`
-    );
+  // console.log('Webpack принимает путь: ' + pageFilePath);
+  // console.log('Страницы: ' + pages);
 
-    // Проверяем, существует ли файл index.js для страницы
-    if (fs.existsSync(indexPath)) {
-      pageEntries[pageName] = indexPath;
+  if (pageFilePath) {
+    // Извлекаем название файла из пути без расширения
+    const fileName = pathNode.basename(pageFilePath, '.js');
+
+    // Проверяем, существует ли такой файл в списке страниц
+    if (pages.includes(fileName)) {
+      const indexPath = pathNode.resolve(pageFilePath);
+      pageEntries[fileName] = indexPath;
+    } else {
+      console.error(`Файл "${fileName}" не найден среди страниц.`);
     }
-  });
+  } else {
+    pages.forEach((page) => {
+      const pageName = page;
+      const indexPath = pathNode.resolve(
+        `${pagesPath}/${page}/styles/js/${page}.js`
+      );
+
+      // Проверяем, существует ли файл index.js для страницы
+      if (fs.existsSync(indexPath)) {
+        pageEntries[pageName] = indexPath;
+      }
+    });
+  }
 
   return pageEntries;
 };
 
-export const webpackConfig = (isMode) => ({
+export const webpackConfig = (isMode, pageFilePath) => ({
   entry: {
-    ...getPageEntries(),
+    ...getPageEntries(pageFilePath),
   },
   mode: isMode ? 'development' : 'production',
   output: {

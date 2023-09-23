@@ -1,0 +1,19 @@
+.counter-input {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  max-width: 200px;
+  gap: 19px;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  font-size: 22px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  & ::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
