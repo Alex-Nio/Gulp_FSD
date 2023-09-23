@@ -2,8 +2,19 @@
 import path from 'path';
 import * as glob from 'glob';
 import fs from 'fs';
+import webpack from 'webpack-stream';
+import { webpackConfig } from './../../../webpack.config.js';
+import * as dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+
+const sass = gulpSass(dartSass);
 
 const __dirname = path.resolve();
+
+function reloadBrowser() {
+  app.plugins.browserSync.reload(); // Вызываем метод reload() для перезагрузки браузера
+  console.log('reloaded');
+}
 
 // Функция для определения последнего измененного файла из массива
 function findLastModifiedFile(files) {
@@ -32,7 +43,7 @@ function extractWidgetName(filePath) {
   return null;
 }
 
-// Функция для поиска виджетов в JS файлах страниц
+//! HTML
 export const findWidgetHtml = () => {
   const W_HTML = glob.sync(app.path.src.widgets.html);
 
@@ -109,6 +120,7 @@ export const findWidgetHtml = () => {
       }
 
       const currentChangedWidget = [html];
+      const totalFilesToProcess = currentChangedWidget.length;
 
       console.log(`Поиск файла виджета HTML: ${currentChangedWidget}`);
       console.log(
@@ -162,13 +174,17 @@ export const findWidgetHtml = () => {
               })
             )
             .pipe(app.plugins.flatten({ includeParents: 0 }))
-            .pipe(app.gulp.dest(app.path.build.html))
-            .pipe(app.plugins.browserSync.stream());
+            .pipe(app.gulp.dest(app.path.build.html));
         });
       });
+    })
+    .on('end', () => {
+      console.log('end');
+      reloadBrowser();
     });
 };
 
+//! Scss
 export const findWidgetScss = () => {
   const W_SCSS = glob.sync(app.path.src.widgets.scss);
 
@@ -226,11 +242,11 @@ export const findWidgetScss = () => {
       // console.log(JSON.stringify(pages, null, 2));
       // console.log('---------------------------');
 
-      //* Перебор всех ключей в объекте
+      // Перебор всех ключей в объекте
       function findKeysWithName(obj, name) {
         const result = [];
 
-        //* Проверка каждого массива значений на наличие данного наименования
+        // Проверка каждого массива значений на наличие данного наименования
         for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
             const values = obj[key];
@@ -245,18 +261,67 @@ export const findWidgetScss = () => {
       }
 
       const currentChangedWidget = [scss];
-      let result = [];
-
-      currentChangedWidget.forEach((name) => {
-        let key = findKeysWithName(pages, name);
-        result.push(key);
-      });
 
       console.log(`Поиск файла виджета Scss: ${currentChangedWidget}`);
-      console.log(`Файл виджета найден в страницах: ${result}`);
+      console.log(
+        `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
+      );
+
+      currentChangedWidget.forEach((name) => {
+        let pageNames = findKeysWithName(pages, name);
+
+        pageNames.forEach((pageName) => {
+          let pageFilePath = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
+          console.log(pageFilePath);
+
+          return (
+            app.gulp
+              .src(pageFilePath, { sourcemaps: app.build.default })
+              .pipe(
+                app.plugins.plumber(
+                  app.plugins.notify.onError({
+                    title: 'SCSS',
+                    message: 'Error: <%= error.message %>',
+                  })
+                )
+              )
+              .pipe(app.plugins.replace(/@img\//g, '../images/'))
+              .pipe(sass({ outputStyle: 'expanded' }))
+              .pipe(app.plugins.groupCssMediaQueries())
+              .pipe(
+                app.plugins.if(
+                  app.build.max || app.build.optimized,
+                  app.plugins.webpcss({
+                    webpClass: '.webp',
+                    noWebpClass: '.no-webp',
+                  })
+                )
+              )
+              .pipe(
+                app.plugins.autoPrefixer({
+                  grid: false,
+                  overrideBrowserslist: ['last 10 versions'],
+                  cascade: true,
+                })
+              )
+              // Расскомментировать если нужен обычный дубль файла стилей
+              // .pipe(app.gulp.dest(app.path.build.css))
+              .pipe(app.plugins.cleanCss())
+              .pipe(
+                app.plugins.rename((file) => {
+                  file.dirname = ''; // Удаляем имя папки
+                  file.extname = '.min.css'; // Меняем расширение файла
+                })
+              )
+              .pipe(app.gulp.dest(app.path.build.css))
+              .pipe(app.plugins.browserSync.stream())
+          );
+        });
+      });
     });
 };
 
+//! JS
 export const findWidgetJs = () => {
   const W_JS = glob.sync(app.path.src.widgets.js);
 
@@ -332,16 +397,36 @@ export const findWidgetJs = () => {
         return result;
       }
 
-      const currentChangedWidget = [html];
-      let result = [];
+      const currentChangedWidget = [js];
+
+      console.log(`Поиск файла виджета Js: ${currentChangedWidget}`);
+      console.log(
+        `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
+      );
 
       currentChangedWidget.forEach((name) => {
-        let key = findKeysWithName(pages, name);
-        result.push(key);
-      });
+        let pageNames = findKeysWithName(pages, name);
 
-      console.log(`Поиск файла виджета HTML: ${currentChangedWidget}`);
-      console.log(`Файл виджета найден в страницах: ${result}`);
+        pageNames.forEach((pageName) => {
+          let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
+          console.log(pageFilePath);
+
+          app.gulp
+            .src(pageFilePath, { sourcemaps: app.build.default })
+            .pipe(
+              app.plugins.plumber(
+                app.plugins.notify.onError({
+                  title: 'JS',
+                  message: 'Error: <%= error.message %>',
+                })
+              )
+            )
+            .pipe(webpack({ config: webpackConfig(app.build.default) }))
+            .pipe(app.plugins.flatten({ includeParents: 0 }))
+            .pipe(app.gulp.dest(app.path.build.js))
+            .pipe(app.plugins.browserSync.stream());
+        });
+      });
     });
 };
 
