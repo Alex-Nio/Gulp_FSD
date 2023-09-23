@@ -9,36 +9,36 @@ import gulpSass from 'gulp-sass';
 
 const sass = gulpSass(dartSass);
 const __dirname = path.resolve();
-const loggerEnabled = true;
+const loggerEnabled = false;
 
 //! Logger
 const widgetsLogger = (log, variable) => {
   switch (log) {
     case 'extracted html':
-      console.log(`Последний измененный файл Html: ${variable}`);
+      console.log(log, `Последний измененный файл Html: ${variable}`);
       break;
     case 'extracted scss':
-      console.log(`Последний измененный файл Scss: ${variable}`);
+      console.log(log, `Последний измененный файл Scss: ${variable}`);
       break;
     case 'extracted js':
-      console.log(`Последний измененный файл Js: ${variable}`);
+      console.log(log, `Последний измененный файл Js: ${variable}`);
       break;
     case 'extracted data':
       console.log('-------------DATA----------');
-      console.log(variable);
+      console.log(log, variable);
       console.log('---------------------------');
       break;
     case 'search html':
-      console.log(`Поиск виджета HTML: ${variable}`);
+      console.log(log, `Поиск виджета HTML: ${variable}`);
       break;
     case 'search scss':
-      console.log(`Поиск виджета Scss: ${variable}`);
+      console.log(log, `Поиск виджета Scss: ${variable}`);
       break;
     case 'search js':
-      console.log(`Поиск виджета Js: ${variable}`);
+      console.log(log, `Поиск виджета Js: ${variable}`);
       break;
     case 'widget found':
-      console.log(`Файл виджета найден в страницах: ${variable}`);
+      console.log(log, `Файл виджета найден в страницах: ${variable}`);
       break;
     case 'null':
       break;
@@ -48,7 +48,6 @@ const widgetsLogger = (log, variable) => {
 // Hot reloading
 function reloadBrowser() {
   app.plugins.browserSync.reload(); // Вызываем метод reload() для перезагрузки браузера
-  console.log('reloaded');
 }
 
 // Функция для определения последнего измененного файла из массива
@@ -109,7 +108,7 @@ export const findWidgetHtml = () => {
   //* Logger
   loggerEnabled
     ? widgetsLogger('extracted html', html)
-    : widgetsLogger('null', html);
+    : widgetsLogger('null', null);
 
   return app.gulp
     .src(app.path.src.pages.js)
@@ -295,7 +294,6 @@ export const findWidgetScss = () => {
 
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
-          console.log(pageFilePath);
 
           return (
             app.gulp
@@ -348,7 +346,6 @@ export const findWidgetScss = () => {
 
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
-          console.log(pageFilePath);
 
           app.gulp
             .src(pageFilePath, { sourcemaps: app.build.default })
@@ -386,7 +383,9 @@ export const findWidgetJs = () => {
   const js = extractWidgetName(lastModifiedWidgetJs);
 
   //* Logger
-  loggerEnabled ? widgetsLogger('extracted js', js) : widgetsLogger('null', js);
+  loggerEnabled
+    ? widgetsLogger('extracted js', js)
+    : widgetsLogger('null', null);
 
   const pages = {};
 
@@ -449,7 +448,6 @@ export const findWidgetJs = () => {
 
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
-          console.log(pageFilePath);
 
           app.gulp
             .src(pageFilePath, { sourcemaps: app.build.default })
