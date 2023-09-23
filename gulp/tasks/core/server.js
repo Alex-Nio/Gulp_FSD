@@ -1,7 +1,7 @@
 /* eslint-disable */
 import inquirer from 'inquirer';
 import browserSync from 'browser-sync';
-import fs from 'fs/promises'; // Используем асинхронные методы работы с файлами
+import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -9,7 +9,7 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const configPath = path.join(__dirname, 'config.json'); // Абсолютный путь к файлу config.json
+const configPath = path.join(__dirname, 'browser.json'); // Абсолютный путь к файлу config.json
 
 export const server = async (done) => {
   const browsers = ['firefox', 'opera', 'chrome'];
