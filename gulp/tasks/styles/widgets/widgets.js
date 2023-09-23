@@ -9,7 +9,43 @@ import gulpSass from 'gulp-sass';
 
 const sass = gulpSass(dartSass);
 const __dirname = path.resolve();
+const loggerEnabled = true;
 
+//! Logger
+const widgetsLogger = (log, variable) => {
+  switch (log) {
+    case 'extracted html':
+      console.log(`Последний измененный файл Html: ${variable}`);
+      break;
+    case 'extracted scss':
+      console.log(`Последний измененный файл Scss: ${variable}`);
+      break;
+    case 'extracted js':
+      console.log(`Последний измененный файл Js: ${variable}`);
+      break;
+    case 'extracted data':
+      console.log('-------------DATA----------');
+      console.log(variable);
+      console.log('---------------------------');
+      break;
+    case 'search html':
+      console.log(`Поиск виджета HTML: ${variable}`);
+      break;
+    case 'search scss':
+      console.log(`Поиск виджета Scss: ${variable}`);
+      break;
+    case 'search js':
+      console.log(`Поиск виджета Js: ${variable}`);
+      break;
+    case 'widget found':
+      console.log(`Файл виджета найден в страницах: ${variable}`);
+      break;
+    case 'null':
+      break;
+  }
+};
+
+// Hot reloading
 function reloadBrowser() {
   app.plugins.browserSync.reload(); // Вызываем метод reload() для перезагрузки браузера
   console.log('reloaded');
@@ -33,6 +69,7 @@ function findLastModifiedFile(files) {
   return lastModifiedFile;
 }
 
+// Extracting the last modification time
 function extractWidgetName(filePath) {
   const parts = filePath.split(path.sep);
   if (parts.length >= 4) {
@@ -42,22 +79,37 @@ function extractWidgetName(filePath) {
   return null;
 }
 
+// Перебор всех ключей в объекте
+function findKeysWithName(obj, name) {
+  const result = [];
+
+  // Проверка каждого массива значений на наличие данного наименования
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const values = obj[key];
+
+      if (values.includes(name)) {
+        result.push(key);
+      }
+    }
+  }
+
+  return result;
+}
+
 //! HTML
 export const findWidgetHtml = () => {
   const W_HTML = glob.sync(app.path.src.widgets.html);
 
   // Определение последнего измененного файла
   const lastModifiedWidgetHtml = findLastModifiedFile(W_HTML);
-
   const html = extractWidgetName(lastModifiedWidgetHtml);
-
-  // console.log(`Последний измененный файл Html: ${lastModifiedWidgetHtml}`);
-
-  // console.log('--------Компоненты которые были изменены--------');
-  // console.log(html);
-  // console.log('------------------------------------------------');
-
   const pages = {};
+
+  //* Logger
+  loggerEnabled
+    ? widgetsLogger('extracted html', html)
+    : widgetsLogger('null', html);
 
   return app.gulp
     .src(app.path.src.pages.js)
@@ -96,35 +148,22 @@ export const findWidgetHtml = () => {
       })
     )
     .on('end', () => {
-      // console.log('-------------DATA----------');
-      // console.log(JSON.stringify(pages, null, 2));
-      // console.log('---------------------------');
-
-      // Перебор всех ключей в объекте
-      function findKeysWithName(obj, name) {
-        const result = [];
-
-        // Проверка каждого массива значений на наличие данного наименования
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            const values = obj[key];
-
-            if (values.includes(name)) {
-              result.push(key);
-            }
-          }
-        }
-
-        return result;
-      }
-
       const currentChangedWidget = [html];
-      const totalFilesToProcess = currentChangedWidget.length;
 
-      console.log(`Поиск файла виджета HTML: ${currentChangedWidget}`);
-      console.log(
-        `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
-      );
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('extracted data', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('search html', currentChangedWidget)
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('widget found', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
 
       currentChangedWidget.forEach((name) => {
         let pageNames = findKeysWithName(pages, name);
@@ -178,7 +217,6 @@ export const findWidgetHtml = () => {
       });
     })
     .on('end', () => {
-      console.log('end');
       reloadBrowser();
     });
 };
@@ -189,16 +227,13 @@ export const findWidgetScss = () => {
 
   // Определение последнего измененного файла
   const lastModifiedWidgetScss = findLastModifiedFile(W_SCSS);
-
   const scss = extractWidgetName(lastModifiedWidgetScss);
-
-  // console.log(`Последний измененный файл Scss: ${lastModifiedWidgetScss}`);
-
-  // console.log('--------Компоненты которые были изменены--------');
-  // console.log(scss);
-  // console.log('------------------------------------------------');
-
   const pages = {};
+
+  //* Logger
+  loggerEnabled
+    ? widgetsLogger('extracted scss', scss)
+    : widgetsLogger('null', scss);
 
   return app.gulp
     .src(app.path.src.pages.js)
@@ -237,34 +272,22 @@ export const findWidgetScss = () => {
       })
     )
     .on('end', () => {
-      // console.log('-------------DATA----------');
-      // console.log(JSON.stringify(pages, null, 2));
-      // console.log('---------------------------');
-
-      // Перебор всех ключей в объекте
-      function findKeysWithName(obj, name) {
-        const result = [];
-
-        // Проверка каждого массива значений на наличие данного наименования
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            const values = obj[key];
-
-            if (values.includes(name)) {
-              result.push(key);
-            }
-          }
-        }
-
-        return result;
-      }
-
       const currentChangedWidget = [scss];
 
-      console.log(`Поиск файла виджета Scss: ${currentChangedWidget}`);
-      console.log(
-        `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
-      );
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('extracted data', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('search html', currentChangedWidget)
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('widget found', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
 
       // scss compile
       currentChangedWidget.forEach((name) => {
@@ -349,7 +372,6 @@ export const findWidgetScss = () => {
       });
     })
     .on('end', () => {
-      console.log('end');
       reloadBrowser();
     });
 };
@@ -363,11 +385,8 @@ export const findWidgetJs = () => {
 
   const js = extractWidgetName(lastModifiedWidgetJs);
 
-  // console.log(`Последний измененный файл Js: ${lastModifiedWidgetJs}`);
-
-  // console.log('--------Компоненты которые были изменены--------');
-  // console.log(js);
-  // console.log('------------------------------------------------');
+  //* Logger
+  loggerEnabled ? widgetsLogger('extracted js', js) : widgetsLogger('null', js);
 
   const pages = {};
 
@@ -408,34 +427,22 @@ export const findWidgetJs = () => {
       })
     )
     .on('end', () => {
-      // console.log('-------------DATA----------');
-      // console.log(JSON.stringify(pages, null, 2));
-      // console.log('---------------------------');
-
-      // Перебор всех ключей в объекте
-      function findKeysWithName(obj, name) {
-        const result = [];
-
-        // Проверка каждого массива значений на наличие данного наименования
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            const values = obj[key];
-
-            if (values.includes(name)) {
-              result.push(key);
-            }
-          }
-        }
-
-        return result;
-      }
-
       const currentChangedWidget = [js];
 
-      console.log(`Поиск файла виджета Js: ${currentChangedWidget}`);
-      console.log(
-        `Файл виджета найден в страницах: ${JSON.stringify(pages, null, 2)}`
-      );
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('extracted data', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('search js', currentChangedWidget)
+        : widgetsLogger('null', null);
+
+      //* Logger
+      loggerEnabled
+        ? widgetsLogger('widget found', JSON.stringify(pages, null, 2))
+        : widgetsLogger('null', null);
 
       currentChangedWidget.forEach((name) => {
         let pageNames = findKeysWithName(pages, name);
@@ -466,7 +473,6 @@ export const findWidgetJs = () => {
       });
     })
     .on('end', () => {
-      console.log('end');
       reloadBrowser();
     });
 };
