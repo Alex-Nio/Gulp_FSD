@@ -1,14 +1,15 @@
+const counterInput = document.getElementById('counter-input');
 const decreaseButton = document.querySelector('.decrease');
 const increaseButton = document.querySelector('.increase');
 
 decreaseButton.addEventListener('click', () => {
-  const counterInput = document.getElementById('counter-input');
   counterInput.value--;
 });
 
 increaseButton.addEventListener('click', () => {
-  const counterInput = document.getElementById('counter-input');
   counterInput.value++;
 });
+
+counterInput.value = 0;
 
 export { increaseButton, decreaseButton };

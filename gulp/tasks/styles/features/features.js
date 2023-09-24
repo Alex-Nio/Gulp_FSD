@@ -136,6 +136,7 @@ export const findFeatureHtml = () => {
             const FeatureName = importPath.match(/\/widgets\/([^/]+)\//); // Извлекаем часть пути // header
 
             if (FeatureName) {
+              // искомый виджет в котором используется фича html
               const widget = FeatureName[1];
 
               const widgetObject = {
@@ -144,10 +145,6 @@ export const findFeatureHtml = () => {
               };
 
               FeatureNames.push(widgetObject);
-
-              console.log(
-                `${widget} -искомый виджет в котором используется фича ${html}`
-              );
             }
           }
 
@@ -223,7 +220,7 @@ export const findFeatureHtml = () => {
       currentChangedFeature.forEach((name) => {
         let pageNames = findKeysWithName(pages, name);
 
-        console.log(pageNames, ' : страница в виджете которой обновили фичу');
+        // console.log(`Страницы, содержащие виджет: ${pageNames}`);
 
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/${pageName}.html`;
@@ -269,6 +266,7 @@ export const findFeatureScss = () => {
             const FeatureName = importPath.match(/\/widgets\/([^/]+)\//); // Извлекаем часть пути
 
             if (FeatureName) {
+              // искомый виджет в котором используется фича scss
               const widget = FeatureName[1];
 
               const widgetObject = {
@@ -277,10 +275,6 @@ export const findFeatureScss = () => {
               };
 
               FeatureNames.push(widgetObject);
-
-              console.log(
-                `${widget} -искомый виджет в котором используется фича ${scss}`
-              );
             }
           }
 
@@ -297,8 +291,8 @@ export const findFeatureScss = () => {
     )
     .on('end', () => {
       const currentChangedFeature = [scss];
-      // compile function
-      const compile = (pageFilePath) => {
+      // Scss compile function
+      const compileScss = (pageFilePath) => {
         return (
           app.gulp
             .src(pageFilePath, { sourcemaps: app.build.default })
@@ -339,8 +333,27 @@ export const findFeatureScss = () => {
               })
             )
             .pipe(app.gulp.dest(app.path.build.css))
-            .pipe(app.plugins.browserSync.stream())
         );
+      };
+      // Js compile function
+      const compileJs = (pageFilePath) => {
+        app.gulp
+          .src(pageFilePath, { sourcemaps: app.build.default })
+          .pipe(
+            app.plugins.plumber(
+              app.plugins.notify.onError({
+                title: 'JS',
+                message: 'Error: <%= error.message %>',
+              })
+            )
+          )
+          .pipe(
+            webpack({
+              config: webpackConfig(app.build.default, pageFilePath),
+            })
+          )
+          .pipe(app.plugins.flatten({ includeParents: 0 }))
+          .pipe(app.gulp.dest(app.path.build.js));
       };
 
       //* Logger
@@ -363,37 +376,11 @@ export const findFeatureScss = () => {
         let pageNames = findKeysWithName(pages, name);
 
         pageNames.forEach((pageName) => {
-          let pageFilePath = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
+          let pageScssFilePath = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
+          let pageJsFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
 
-          compile(pageFilePath);
-        });
-      });
-
-      // js compile
-      currentChangedFeature.forEach((name) => {
-        let pageNames = findKeysWithName(pages, name);
-
-        pageNames.forEach((pageName) => {
-          let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
-
-          app.gulp
-            .src(pageFilePath, { sourcemaps: app.build.default })
-            .pipe(
-              app.plugins.plumber(
-                app.plugins.notify.onError({
-                  title: 'JS',
-                  message: 'Error: <%= error.message %>',
-                })
-              )
-            )
-            .pipe(
-              webpack({
-                config: webpackConfig(app.build.default, pageFilePath),
-              })
-            )
-            .pipe(app.plugins.flatten({ includeParents: 0 }))
-            .pipe(app.gulp.dest(app.path.build.js))
-            .pipe(app.plugins.browserSync.stream());
+          compileScss(pageScssFilePath);
+          compileJs(pageJsFilePath);
         });
       });
     })
@@ -438,6 +425,7 @@ export const findFeatureJs = () => {
             const FeatureName = importPath.match(/\/widgets\/([^/]+)\//); // Извлекаем часть пути // header
 
             if (FeatureName) {
+              // искомый виджет в котором используется фича js
               const widget = FeatureName[1];
 
               const widgetObject = {
@@ -446,10 +434,6 @@ export const findFeatureJs = () => {
               };
 
               FeatureNames.push(widgetObject);
-
-              console.log(
-                `${widget} -искомый виджет в котором используется фича ${js}`
-              );
             }
 
             // Сохраняем информацию о виджетах для текущей страницы
