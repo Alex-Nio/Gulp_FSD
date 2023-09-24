@@ -1,0 +1,8 @@
+.counter {
+  // .counter__inner
+  &__inner {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+  }
+}

@@ -72,7 +72,7 @@ export const webpackConfig = (isMode, pageFilePath) => ({
         },
       },
       {
-        test: [/\.css$/, /\.scss$/],
+        test: [/\.scss$/, /\.css$/],
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],

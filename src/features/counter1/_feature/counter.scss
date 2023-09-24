@@ -1,0 +1,9 @@
+.counter-test {
+  // .counter__inner
+  &__inner {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    background-color: #6e96bf;
+  }
+}

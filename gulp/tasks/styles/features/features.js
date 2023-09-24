@@ -333,11 +333,12 @@ export const findFeatureScss = () => {
               })
             )
             .pipe(app.gulp.dest(app.path.build.css))
+            .pipe(app.plugins.browserSync.stream())
         );
       };
       // Js compile function
       const compileJs = (pageFilePath) => {
-        app.gulp
+        return app.gulp
           .src(pageFilePath, { sourcemaps: app.build.default })
           .pipe(
             app.plugins.plumber(
@@ -353,7 +354,8 @@ export const findFeatureScss = () => {
             })
           )
           .pipe(app.plugins.flatten({ includeParents: 0 }))
-          .pipe(app.gulp.dest(app.path.build.js));
+          .pipe(app.gulp.dest(app.path.build.js))
+          .pipe(app.plugins.browserSync.stream());
       };
 
       //* Logger
@@ -383,9 +385,6 @@ export const findFeatureScss = () => {
           compileJs(pageJsFilePath);
         });
       });
-    })
-    .on('end', () => {
-      reloadBrowser();
     });
 };
 
@@ -497,8 +496,5 @@ export const findFeatureJs = () => {
           compile(pageFilePath);
         });
       });
-    })
-    .on('end', () => {
-      reloadBrowser();
     });
 };
