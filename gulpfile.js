@@ -46,6 +46,13 @@ import {
   findWidgetJs,
 } from './gulp/tasks/styles/widgets/widgets.js';
 
+//? Features
+import {
+  findFeatureHtml,
+  findFeatureScss,
+  findFeatureJs,
+} from './gulp/tasks/styles/features/features.js';
+
 // TODO: add
 // import { zip } from './gulp/tasks/zip.js';
 // import { ftp } from './gulp/tasks/ftp.js';
@@ -57,7 +64,9 @@ function watcher() {
   gulp.watch(path.watch.widgets.scss, findWidgetScss);
   gulp.watch(path.watch.widgets.js, findWidgetJs);
   //Test
-
+  gulp.watch(path.watch.features.html, findFeatureHtml);
+  gulp.watch(path.watch.features.scss, findFeatureScss);
+  gulp.watch(path.watch.features.js, findFeatureJs);
   //
   gulp.watch(path.watch.shared.ui, html);
   gulp.watch(path.watch.app, gulp.parallel(scss, json));

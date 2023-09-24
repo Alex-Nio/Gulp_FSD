@@ -39,9 +39,15 @@ export const path = {
       html: `${layers.widgets}/**/*.html`,
       scss: `${layers.widgets}/**/*.scss`,
       js: `${layers.widgets}/**/*.js`,
+      api: `${layers.widgets}/**/api.js`,
     },
     //* Features
-    features: `${layers.features}/**/*.js`,
+    features: {
+      html: `${layers.features}/**/*.html`,
+      scss: `${layers.features}/**/*.scss`,
+      js: `${layers.features}/**/*.js`,
+      api: `${layers.features}/**/api.js`,
+    },
     //* Shared
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,
@@ -67,7 +73,11 @@ export const path = {
       js: `${layers.widgets}/**/*.js`,
     },
     //* Features
-    features: `${layers.features}/**/*.js`,
+    features: {
+      html: `${layers.features}/**/*.html`,
+      scss: `${layers.features}/**/*.scss`,
+      js: `${layers.features}/**/*.js`,
+    },
     //* Shared
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,

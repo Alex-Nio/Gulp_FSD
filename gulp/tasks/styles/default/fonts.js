@@ -28,7 +28,7 @@ export const ttfToWoff2 = () => {
 // 3. Переносим файлы icon шрифта
 export const iconFont = () => {
   const iconFontFiles = app.gulp
-    .src(`${app.path.src.shared.fonts}/_iconfont.{woff,eot,svg}`)
+    .src(`${app.path.src.shared.fonts}/iconfont.{woff,eot,svg}`)
     .pipe(app.gulp.dest(`${app.path.build.fonts}`));
 
   return mergeStream(iconFontFiles);

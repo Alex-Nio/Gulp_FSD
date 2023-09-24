@@ -1,5 +1,5 @@
 // widgets
 import * as headerWidget from './../../../../widgets/header/api';
-import * as counterWidget from './../../../../widgets/counter/api';
+import * as otherWidget from './../../../../widgets/other/api';
 // handlers
-import * as handlers from './../../../../processes/handlers/handlers.js';
+import * as handlers from './../../../../app/core/handlers.js';

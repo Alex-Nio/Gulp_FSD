@@ -1,0 +1,22 @@
+.header {
+  width: 100%;
+  background-color: rgb(206, 214, 214);
+  z-index: 50;
+
+  // .header__inner
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px 0;
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: #000;
+    color: white;
+    text-align: center;
+  }
+}

@@ -21,7 +21,7 @@ export const html = () => {
     .pipe(
       app.plugins.fileinclude({
         prefix: '@@',
-        basepath: path.join(__dirname, 'src/widgets'),
+        basepath: path.join(__dirname, 'src'),
       })
     )
     .pipe(
