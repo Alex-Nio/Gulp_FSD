@@ -52,7 +52,9 @@ export const path = {
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,
       fonts: `${layers.shared}/assets/fonts/`,
-      ui: `${layers.shared}/**/ui/*.html`,
+      ui: `${layers.shared}/components/**/ui/*.html`,
+      scss: `${layers.shared}/components/**/ui/*.scss`,
+      js: `${layers.shared}/components/**/*.js`,
     },
   },
   watch: {
@@ -82,7 +84,9 @@ export const path = {
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,
       fonts: `${layers.shared}/assets/fonts/`,
-      ui: `${layers.shared}/**/ui/*.html`,
+      ui: `${layers.shared}/components/**/ui/*.html`,
+      scss: `${layers.shared}/components/**/ui/*.scss`,
+      js: `${layers.shared}/components/**/*.js`,
     },
   },
   clean: buildFolder,

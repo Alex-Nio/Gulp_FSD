@@ -45,11 +45,6 @@ const widgetsLogger = (log, variable) => {
   }
 };
 
-// Hot reloading
-function reloadBrowser() {
-  app.plugins.browserSync.reload(); // Вызываем метод reload() для перезагрузки браузера
-}
-
 // Функция для определения последнего измененного файла из массива
 function findLastModifiedFile(files) {
   let lastModifiedFile = null;
@@ -105,6 +100,33 @@ const findWidgetHtml = () => {
   const html = extractWidgetName(lastModifiedWidgetHtml);
   const pages = {};
 
+  // Extracting the widget name from the pages
+  const extractWidget = (file) => {
+    const fileContents = file.contents.toString();
+    const widgetNames = [];
+    const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
+
+    // Регулярное выражение для поиска названий папок виджетов
+    const importPattern = /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
+
+    let match;
+    while ((match = importPattern.exec(fileContents)) !== null) {
+      const importPath = match[2]; // Получаем путь из импорта
+      const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
+
+      if (widgetName) {
+        const widget = widgetName[1];
+        widgetNames.push(widget);
+      }
+    }
+
+    // Сохраняем информацию о виджетах для текущей страницы
+    pages[pageName] = widgetNames;
+
+    // Передаем информацию в следующий этап обработки
+    file.widgetNames = widgetNames;
+  };
+
   //* Logger
   loggerEnabled
     ? widgetsLogger('extracted html', html)
@@ -114,40 +136,57 @@ const findWidgetHtml = () => {
     .src(app.path.src.pages.js)
     .pipe(
       app.plugins.through2.obj((file, enc, cb) => {
-        const fileContents = file.contents.toString();
-        const widgetNames = [];
-        const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
-
-        // Регулярное выражение для поиска названий папок виджетов
-        const importPattern =
-          /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
-
-        let match;
-        while ((match = importPattern.exec(fileContents)) !== null) {
-          const importPath = match[2]; // Получаем путь из импорта
-          const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
-
-          if (widgetName) {
-            const widget = widgetName[1];
-            widgetNames.push(widget);
-          }
-        }
-
-        // Полученные виджеты
-        // console.log('--------Компоненты--------');
-        // console.log(widgetNames);
-        // console.log('---------------------------');
-
-        // Сохраняем информацию о виджетах для текущей страницы
-        pages[pageName] = widgetNames;
-
-        // Передаем информацию в следующий этап обработки
-        file.widgetNames = widgetNames;
+        extractWidget(file);
         cb(null, file);
       })
     )
     .on('end', () => {
       const currentChangedWidget = [html];
+      // Compile page html
+      const compilePageHtml = (pageFilePath) => {
+        return app.gulp
+          .src(pageFilePath)
+          .pipe(
+            app.plugins.plumber(
+              app.plugins.notify.onError({
+                title: 'HTML',
+                message: 'Ошибка: <%= error.message %>',
+              })
+            )
+          )
+          .pipe(
+            app.plugins.fileinclude({
+              prefix: '@@',
+              basepath: path.join(__dirname, 'src'),
+            })
+          )
+          .pipe(
+            app.plugins.htmlMin({
+              useShortDoctype: true,
+              sortClassName: true,
+              collapseWhitespace: app.build.max || app.build.min,
+              removeComments: app.build.max || app.build.min,
+            })
+          )
+          .pipe(app.plugins.replace(/@img\//g, 'images/'))
+          .pipe(app.plugins.if(app.build.max, app.plugins.webpHtmlNosvg()))
+          .pipe(
+            app.plugins.versionNumber({
+              value: '%DT%',
+              append: {
+                key: '_v',
+                cover: 0,
+                to: ['css', 'js'],
+              },
+              output: {
+                file: 'gulp/version.json',
+              },
+            })
+          )
+          .pipe(app.plugins.flatten({ includeParents: 0 }))
+          .pipe(app.gulp.dest(app.path.build.html))
+          .pipe(app.plugins.browserSync.stream());
+      };
 
       //* Logger
       loggerEnabled
@@ -169,54 +208,10 @@ const findWidgetHtml = () => {
 
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/${pageName}.html`;
-          console.log(pageFilePath);
 
-          return app.gulp
-            .src(pageFilePath)
-            .pipe(
-              app.plugins.plumber(
-                app.plugins.notify.onError({
-                  title: 'HTML',
-                  message: 'Ошибка: <%= error.message %>',
-                })
-              )
-            )
-            .pipe(
-              app.plugins.fileinclude({
-                prefix: '@@',
-                basepath: path.join(__dirname, 'src'),
-              })
-            )
-            .pipe(
-              app.plugins.htmlMin({
-                useShortDoctype: true,
-                sortClassName: true,
-                collapseWhitespace: app.build.max || app.build.min,
-                removeComments: app.build.max || app.build.min,
-              })
-            )
-            .pipe(app.plugins.replace(/@img\//g, 'images/'))
-            .pipe(app.plugins.if(app.build.max, app.plugins.webpHtmlNosvg()))
-            .pipe(
-              app.plugins.versionNumber({
-                value: '%DT%',
-                append: {
-                  key: '_v',
-                  cover: 0,
-                  to: ['css', 'js'],
-                },
-                output: {
-                  file: 'gulp/version.json',
-                },
-              })
-            )
-            .pipe(app.plugins.flatten({ includeParents: 0 }))
-            .pipe(app.gulp.dest(app.path.build.html));
+          compilePageHtml(pageFilePath);
         });
       });
-    })
-    .on('end', () => {
-      reloadBrowser();
     });
 };
 
@@ -229,6 +224,33 @@ const findWidgetScss = () => {
   const scss = extractWidgetName(lastModifiedWidgetScss);
   const pages = {};
 
+  // Extracting the widget name from the pages
+  const extractWidget = (file) => {
+    const fileContents = file.contents.toString();
+    const widgetNames = [];
+    const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
+
+    // Регулярное выражение для поиска названий папок виджетов
+    const importPattern = /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
+
+    let match;
+    while ((match = importPattern.exec(fileContents)) !== null) {
+      const importPath = match[2]; // Получаем путь из импорта
+      const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
+
+      if (widgetName) {
+        const widget = widgetName[1];
+        widgetNames.push(widget);
+      }
+    }
+
+    //* Сохраняем информацию о виджетах для текущей страницы
+    pages[pageName] = widgetNames;
+
+    //* Передаем информацию в следующий этап обработки
+    file.widgetNames = widgetNames;
+  };
+
   //* Logger
   loggerEnabled
     ? widgetsLogger('extracted scss', scss)
@@ -238,40 +260,79 @@ const findWidgetScss = () => {
     .src(app.path.src.pages.js)
     .pipe(
       app.plugins.through2.obj((file, enc, cb) => {
-        const fileContents = file.contents.toString();
-        const widgetNames = [];
-        const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
-
-        // Регулярное выражение для поиска названий папок виджетов
-        const importPattern =
-          /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
-
-        let match;
-        while ((match = importPattern.exec(fileContents)) !== null) {
-          const importPath = match[2]; // Получаем путь из импорта
-          const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
-
-          if (widgetName) {
-            const widget = widgetName[1];
-            widgetNames.push(widget);
-          }
-        }
-
-        //* Полученные виджеты
-        // console.log('--------Компоненты--------');
-        // console.log(widgetNames);
-        // console.log('---------------------------');
-
-        //* Сохраняем информацию о виджетах для текущей страницы
-        pages[pageName] = widgetNames;
-
-        //* Передаем информацию в следующий этап обработки
-        file.widgetNames = widgetNames;
+        extractWidget(file);
         cb(null, file);
       })
     )
     .on('end', () => {
       const currentChangedWidget = [scss];
+      // Compile page that has widget scss
+      const compileWidgetScss = (pageFilePath) => {
+        return (
+          app.gulp
+            .src(pageFilePath, { sourcemaps: app.build.default })
+            .pipe(
+              app.plugins.plumber(
+                app.plugins.notify.onError({
+                  title: 'SCSS',
+                  message: 'Error: <%= error.message %>',
+                })
+              )
+            )
+            .pipe(app.plugins.replace(/@img\//g, '../images/'))
+            .pipe(sass({ outputStyle: 'expanded' }))
+            .pipe(app.plugins.groupCssMediaQueries())
+            .pipe(
+              app.plugins.if(
+                app.build.max || app.build.optimized,
+                app.plugins.webpcss({
+                  webpClass: '.webp',
+                  noWebpClass: '.no-webp',
+                })
+              )
+            )
+            .pipe(
+              app.plugins.autoPrefixer({
+                grid: false,
+                overrideBrowserslist: ['last 10 versions'],
+                cascade: true,
+              })
+            )
+            // Расскомментировать если нужен обычный дубль файла стилей
+            // .pipe(app.gulp.dest(app.path.build.css))
+            .pipe(app.plugins.cleanCss())
+            .pipe(
+              app.plugins.rename((file) => {
+                file.dirname = ''; // Удаляем имя папки
+                file.extname = '.min.css'; // Меняем расширение файла
+              })
+            )
+            .pipe(app.gulp.dest(app.path.build.css))
+            .pipe(app.plugins.browserSync.stream())
+        );
+      };
+
+      // Compile page that has widget js
+      const compileWidgetJs = (pageFilePath) => {
+        app.gulp
+          .src(pageFilePath, { sourcemaps: app.build.default })
+          .pipe(
+            app.plugins.plumber(
+              app.plugins.notify.onError({
+                title: 'JS',
+                message: 'Error: <%= error.message %>',
+              })
+            )
+          )
+          .pipe(
+            webpack({
+              config: webpackConfig(app.build.default, pageFilePath),
+            })
+          )
+          .pipe(app.plugins.flatten({ includeParents: 0 }))
+          .pipe(app.gulp.dest(app.path.build.js))
+          .pipe(app.plugins.browserSync.stream());
+      };
 
       //* Logger
       loggerEnabled
@@ -293,83 +354,13 @@ const findWidgetScss = () => {
         let pageNames = findKeysWithName(pages, name);
 
         pageNames.forEach((pageName) => {
-          let pageFilePath = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
+          let pageFilePathScss = `src/pages/${pageName}/styles/scss/${pageName}.scss`;
+          let pageFilePathJs = `src/pages/${pageName}/styles/js/${pageName}.js`;
 
-          return (
-            app.gulp
-              .src(pageFilePath, { sourcemaps: app.build.default })
-              .pipe(
-                app.plugins.plumber(
-                  app.plugins.notify.onError({
-                    title: 'SCSS',
-                    message: 'Error: <%= error.message %>',
-                  })
-                )
-              )
-              .pipe(app.plugins.replace(/@img\//g, '../images/'))
-              .pipe(sass({ outputStyle: 'expanded' }))
-              .pipe(app.plugins.groupCssMediaQueries())
-              .pipe(
-                app.plugins.if(
-                  app.build.max || app.build.optimized,
-                  app.plugins.webpcss({
-                    webpClass: '.webp',
-                    noWebpClass: '.no-webp',
-                  })
-                )
-              )
-              .pipe(
-                app.plugins.autoPrefixer({
-                  grid: false,
-                  overrideBrowserslist: ['last 10 versions'],
-                  cascade: true,
-                })
-              )
-              // Расскомментировать если нужен обычный дубль файла стилей
-              // .pipe(app.gulp.dest(app.path.build.css))
-              .pipe(app.plugins.cleanCss())
-              .pipe(
-                app.plugins.rename((file) => {
-                  file.dirname = ''; // Удаляем имя папки
-                  file.extname = '.min.css'; // Меняем расширение файла
-                })
-              )
-              .pipe(app.gulp.dest(app.path.build.css))
-              .pipe(app.plugins.browserSync.stream())
-          );
+          compileWidgetScss(pageFilePathScss);
+          compileWidgetJs(pageFilePathJs);
         });
       });
-
-      // js compile
-      currentChangedWidget.forEach((name) => {
-        let pageNames = findKeysWithName(pages, name);
-
-        pageNames.forEach((pageName) => {
-          let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
-
-          app.gulp
-            .src(pageFilePath, { sourcemaps: app.build.default })
-            .pipe(
-              app.plugins.plumber(
-                app.plugins.notify.onError({
-                  title: 'JS',
-                  message: 'Error: <%= error.message %>',
-                })
-              )
-            )
-            .pipe(
-              webpack({
-                config: webpackConfig(app.build.default, pageFilePath),
-              })
-            )
-            .pipe(app.plugins.flatten({ includeParents: 0 }))
-            .pipe(app.gulp.dest(app.path.build.js))
-            .pipe(app.plugins.browserSync.stream());
-        });
-      });
-    })
-    .on('end', () => {
-      reloadBrowser();
     });
 };
 
@@ -379,54 +370,73 @@ const findWidgetJs = () => {
 
   // Определение последнего измененного файла
   const lastModifiedWidgetJs = findLastModifiedFile(W_JS);
-
   const js = extractWidgetName(lastModifiedWidgetJs);
+  const pages = {};
+
+  // Extracting the widget name from the pages
+  const extractWidget = (file) => {
+    const fileContents = file.contents.toString();
+    const widgetNames = [];
+    const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
+
+    // Регулярное выражение для поиска названий папок виджетов
+    const importPattern = /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
+
+    let match;
+    while ((match = importPattern.exec(fileContents)) !== null) {
+      const importPath = match[2]; // Получаем путь из импорта
+      const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
+
+      if (widgetName) {
+        const widget = widgetName[1];
+        widgetNames.push(widget);
+      }
+    }
+
+    // Сохраняем информацию о виджетах для текущей страницы
+    pages[pageName] = widgetNames;
+
+    // Передаем информацию в следующий этап обработки
+    file.widgetNames = widgetNames;
+  };
 
   //* Logger
   loggerEnabled
     ? widgetsLogger('extracted js', js)
     : widgetsLogger('null', null);
 
-  const pages = {};
-
   return app.gulp
     .src(app.path.src.pages.js)
     .pipe(
       app.plugins.through2.obj((file, enc, cb) => {
-        const fileContents = file.contents.toString();
-        const widgetNames = [];
-        const pageName = path.basename(file.path, '.js').replace(/['"]/g, '');
-
-        // Регулярное выражение для поиска названий папок виджетов
-        const importPattern =
-          /import\s+\*\s+as\s+([^\s]+)\s+from\s+'([^']+?)';/g;
-
-        let match;
-        while ((match = importPattern.exec(fileContents)) !== null) {
-          const importPath = match[2]; // Получаем путь из импорта
-          const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
-
-          if (widgetName) {
-            const widget = widgetName[1];
-            widgetNames.push(widget);
-          }
-        }
-
-        // Полученные виджеты
-        // console.log('--------Компоненты--------');
-        // console.log(widgetNames);
-        // console.log('---------------------------');
-
-        // Сохраняем информацию о виджетах для текущей страницы
-        pages[pageName] = widgetNames;
-
-        // Передаем информацию в следующий этап обработки
-        file.widgetNames = widgetNames;
+        extractWidget(file);
         cb(null, file);
       })
     )
     .on('end', () => {
       const currentChangedWidget = [js];
+
+      // Compile page that has changed widget js
+      const compileWidgetJs = (pageFilePath) => {
+        app.gulp
+          .src(pageFilePath, { sourcemaps: app.build.default })
+          .pipe(
+            app.plugins.plumber(
+              app.plugins.notify.onError({
+                title: 'JS',
+                message: 'Error: <%= error.message %>',
+              })
+            )
+          )
+          .pipe(
+            webpack({
+              config: webpackConfig(app.build.default, pageFilePath),
+            })
+          )
+          .pipe(app.plugins.flatten({ includeParents: 0 }))
+          .pipe(app.gulp.dest(app.path.build.js))
+          .pipe(app.plugins.browserSync.stream());
+      };
 
       //* Logger
       loggerEnabled
@@ -449,29 +459,9 @@ const findWidgetJs = () => {
         pageNames.forEach((pageName) => {
           let pageFilePath = `src/pages/${pageName}/styles/js/${pageName}.js`;
 
-          app.gulp
-            .src(pageFilePath, { sourcemaps: app.build.default })
-            .pipe(
-              app.plugins.plumber(
-                app.plugins.notify.onError({
-                  title: 'JS',
-                  message: 'Error: <%= error.message %>',
-                })
-              )
-            )
-            .pipe(
-              webpack({
-                config: webpackConfig(app.build.default, pageFilePath),
-              })
-            )
-            .pipe(app.plugins.flatten({ includeParents: 0 }))
-            .pipe(app.gulp.dest(app.path.build.js))
-            .pipe(app.plugins.browserSync.stream());
+          compileWidgetJs(pageFilePath);
         });
       });
-    })
-    .on('end', () => {
-      reloadBrowser();
     });
 };
 
