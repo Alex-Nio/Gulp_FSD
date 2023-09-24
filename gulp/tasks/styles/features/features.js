@@ -103,7 +103,7 @@ function findKeysWithName(obj, name) {
 }
 
 //! HTML
-export const findFeatureHtml = () => {
+const findFeatureHtml = () => {
   const F_HTML = glob.sync(app.path.src.features.html);
 
   // Определение последнего измененного файла
@@ -232,7 +232,7 @@ export const findFeatureHtml = () => {
 };
 
 //! Scss
-export const findFeatureScss = () => {
+const findFeatureScss = () => {
   const F_SCSS = glob.sync(app.path.src.features.scss);
 
   // Определение последнего измененного файла
@@ -389,7 +389,7 @@ export const findFeatureScss = () => {
 };
 
 //! JS
-export const findFeatureJs = () => {
+const findFeatureJs = () => {
   const F_JS = glob.sync(app.path.src.features.js);
 
   // Определение последнего измененного файла
@@ -498,3 +498,5 @@ export const findFeatureJs = () => {
       });
     });
 };
+
+export const features = { findFeatureHtml, findFeatureScss, findFeatureJs };

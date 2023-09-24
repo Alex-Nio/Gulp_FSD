@@ -20,42 +20,22 @@ global.app = {
   plugins: plugins,
 };
 
-//? Default
-import { html } from './gulp/tasks/styles/default/html.js';
-import { scss } from './gulp/tasks/styles/default/scss.js';
-import { images } from './gulp/tasks/styles/default/images.js';
-import {
-  ttfToWoff,
-  ttfToWoff2,
-  iconFont,
-} from './gulp/tasks/styles/default/fonts.js';
-
-import { json } from './gulp/tasks/styles/default/json.js';
-import { js } from './gulp/tasks/styles/default/js.js';
-
 //? Core
 import { clean } from './gulp/tasks/core/clean.js';
 import { logger } from './gulp/tasks/core/logger.js';
 import { linter } from './gulp/tasks/core/linter.js';
 import { server } from './gulp/tasks/core/server.js';
-
+//? Default
+import { html } from './gulp/tasks/styles/default/html.js';
+import { scss } from './gulp/tasks/styles/default/scss.js';
+import { images } from './gulp/tasks/styles/default/images.js';
+import { compileFonts } from './gulp/tasks/styles/default/fonts.js';
+import { json } from './gulp/tasks/styles/default/json.js';
+import { js } from './gulp/tasks/styles/default/js.js';
 //? Widgets
-import {
-  findWidgetHtml,
-  findWidgetScss,
-  findWidgetJs,
-} from './gulp/tasks/styles/widgets/widgets.js';
-
+import { widgets } from './gulp/tasks/styles/widgets/widgets.js';
 //? Features
-import {
-  findFeatureHtml,
-  findFeatureScss,
-  findFeatureJs,
-} from './gulp/tasks/styles/features/features.js';
-
-// TODO: add
-// import { zip } from './gulp/tasks/zip.js';
-// import { ftp } from './gulp/tasks/ftp.js';
+import { features } from './gulp/tasks/styles/features/features.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
@@ -66,26 +46,31 @@ function watcher() {
   gulp.watch(path.watch.pages.scss, scss);
   gulp.watch(path.watch.pages.js, js);
   // Widgets
-  gulp.watch(path.watch.widgets.html, findWidgetHtml);
-  gulp.watch(path.watch.widgets.scss, findWidgetScss);
-  gulp.watch(path.watch.widgets.js, findWidgetJs);
+  gulp.watch(path.watch.widgets.html, widgets.findWidgetHtml);
+  gulp.watch(path.watch.widgets.scss, widgets.findWidgetScss);
+  gulp.watch(path.watch.widgets.js, widgets.findWidgetJs);
   // Features
-  gulp.watch(path.watch.features.html, findFeatureHtml);
-  gulp.watch(path.watch.features.scss, findFeatureScss);
-  gulp.watch(path.watch.features.js, findFeatureJs);
+  gulp.watch(path.watch.features.html, features.findFeatureHtml);
+  gulp.watch(path.watch.features.scss, features.findFeatureScss);
+  gulp.watch(path.watch.features.js, features.findFeatureJs);
   // Shared
   gulp.watch(path.watch.shared.ui, html);
 }
 
 // Последовательная обработка шрифтов
-const fontsCopy = gulp.series(ttfToWoff, ttfToWoff2, iconFont, (done) => {
-  logger('fonts done'), done();
-});
+const fonts = gulp.series(
+  compileFonts.ttfToWoff,
+  compileFonts.ttfToWoff2,
+  compileFonts.iconFont,
+  (done) => {
+    logger('fonts done'), done();
+  }
+);
 
 // Основные задачи
 const mainTasks = gulp.series(
   linter,
-  fontsCopy,
+  fonts,
   gulp.parallel(html, scss, js, json, images)
 );
 

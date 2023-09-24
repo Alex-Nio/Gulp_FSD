@@ -4,7 +4,7 @@ import ttf2woff2 from 'gulp-ttf2woff2';
 import mergeStream from 'merge-stream';
 
 // 1. Конвертируем .ttf в .woff
-export const ttfToWoff = () => {
+const ttfToWoff = () => {
   const ttfFiles = app.gulp.src(`${app.path.src.shared.fonts}/*.ttf`, {});
 
   const woffStream = ttfFiles
@@ -15,7 +15,7 @@ export const ttfToWoff = () => {
 };
 
 // 2. Конвертируем .ttf в .woff2
-export const ttfToWoff2 = () => {
+const ttfToWoff2 = () => {
   const ttfFiles = app.gulp.src(`${app.path.src.shared.fonts}/*.ttf`, {});
 
   const woff2Stream = ttfFiles
@@ -26,10 +26,12 @@ export const ttfToWoff2 = () => {
 };
 
 // 3. Переносим файлы icon шрифта
-export const iconFont = () => {
+const iconFont = () => {
   const iconFontFiles = app.gulp
     .src(`${app.path.src.shared.fonts}/iconfont.{woff,eot,svg}`)
     .pipe(app.gulp.dest(`${app.path.build.fonts}`));
 
   return mergeStream(iconFontFiles);
 };
+
+export const compileFonts = { ttfToWoff, ttfToWoff2, iconFont };

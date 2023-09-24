@@ -97,7 +97,7 @@ function findKeysWithName(obj, name) {
 }
 
 //! HTML
-export const findWidgetHtml = () => {
+const findWidgetHtml = () => {
   const W_HTML = glob.sync(app.path.src.widgets.html);
 
   // Определение последнего измененного файла
@@ -221,7 +221,7 @@ export const findWidgetHtml = () => {
 };
 
 //! Scss
-export const findWidgetScss = () => {
+const findWidgetScss = () => {
   const W_SCSS = glob.sync(app.path.src.widgets.scss);
 
   // Определение последнего измененного файла
@@ -374,7 +374,7 @@ export const findWidgetScss = () => {
 };
 
 //! JS
-export const findWidgetJs = () => {
+const findWidgetJs = () => {
   const W_JS = glob.sync(app.path.src.widgets.js);
 
   // Определение последнего измененного файла
@@ -475,15 +475,4 @@ export const findWidgetJs = () => {
     });
 };
 
-// Регулярное выражение для поиска импортов виджетов
-// const importPattern = /import\s+\*\s+as\s+([^\s]+)\s+from\s+'(.*?)';/g;
-
-// let match;
-// while ((match = importPattern.exec(fileContents)) !== null) {
-//   const importedWidgets = match[1].split(',').map((w) => w.trim());
-
-//   // Сохраняем только названия виджетов
-//   importedWidgets.forEach((widget) => {
-//     widgetNames.push(widget);
-//   });
-// }
+export const widgets = { findWidgetHtml, findWidgetScss, findWidgetJs };
