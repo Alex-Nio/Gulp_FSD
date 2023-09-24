@@ -59,19 +59,22 @@ import {
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
+  // App
+  gulp.watch(path.watch.app, gulp.parallel(scss, json));
+  // Pages
   gulp.watch(path.watch.pages.html, html);
+  gulp.watch(path.watch.pages.scss, scss);
+  gulp.watch(path.watch.pages.js, js);
+  // Widgets
   gulp.watch(path.watch.widgets.html, findWidgetHtml);
   gulp.watch(path.watch.widgets.scss, findWidgetScss);
   gulp.watch(path.watch.widgets.js, findWidgetJs);
-  //Test
+  // Features
   gulp.watch(path.watch.features.html, findFeatureHtml);
   gulp.watch(path.watch.features.scss, findFeatureScss);
   gulp.watch(path.watch.features.js, findFeatureJs);
-  //
+  // Shared
   gulp.watch(path.watch.shared.ui, html);
-  gulp.watch(path.watch.app, gulp.parallel(scss, json));
-  gulp.watch(path.watch.pages.scss, scss);
-  gulp.watch(path.watch.pages.js, js);
 }
 
 // Последовательная обработка шрифтов
