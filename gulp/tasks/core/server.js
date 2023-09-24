@@ -61,9 +61,7 @@ export const server = async (done) => {
     }
   }
 
-  const bs = browserSync.create();
-
-  bs.init({
+  app.plugins.browserSync.init({
     server: {
       baseDir: `${app.path.build.html}`,
     },
