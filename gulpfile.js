@@ -36,7 +36,6 @@ import { js } from './gulp/tasks/styles/default/js.js';
 import { widgets } from './gulp/tasks/styles/widgets/widgets.js';
 //? Features
 import { features } from './gulp/tasks/styles/features/features.js';
-//? Shared
 //? Custom
 
 // Наблюдатель за изменениями в файлах
@@ -56,7 +55,8 @@ function watcher() {
   gulp.watch(path.watch.features.scss, features.findFeatureScss);
   gulp.watch(path.watch.features.js, features.findFeatureJs);
   // Shared
-  gulp.watch(path.watch.shared.ui, html);
+  gulp.watch(path.watch.shared.html, html);
+  gulp.watch(path.watch.shared.scss, gulp.series(js, scss));
 }
 
 // Последовательная обработка шрифтов

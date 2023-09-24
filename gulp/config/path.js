@@ -52,7 +52,7 @@ export const path = {
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,
       fonts: `${layers.shared}/assets/fonts/`,
-      ui: `${layers.shared}/components/**/ui/*.html`,
+      html: `${layers.shared}/components/**/ui/*.html`,
       scss: `${layers.shared}/components/**/ui/*.scss`,
       js: `${layers.shared}/components/**/*.js`,
     },
@@ -84,7 +84,7 @@ export const path = {
     shared: {
       images: `${layers.shared}/assets/images/**/*.{jpg,jpeg,png,svg,gif,webp,ico}`,
       fonts: `${layers.shared}/assets/fonts/`,
-      ui: `${layers.shared}/components/**/ui/*.html`,
+      html: `${layers.shared}/components/**/ui/*.html`,
       scss: `${layers.shared}/components/**/ui/*.scss`,
       js: `${layers.shared}/components/**/*.js`,
     },

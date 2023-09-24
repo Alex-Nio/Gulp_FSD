@@ -8,7 +8,7 @@ export const html = () => {
     .src(app.path.src.pages.html)
     .pipe(app.plugins.newer(app.path.src.pages.html))
     .pipe(app.plugins.newer(app.path.src.widgets.html))
-    .pipe(app.plugins.newer(app.path.src.shared.ui))
+    .pipe(app.plugins.newer(app.path.src.shared.html))
     .pipe(app.plugins.gulpCached('html'))
     .pipe(
       app.plugins.plumber(
