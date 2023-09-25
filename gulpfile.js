@@ -37,6 +37,7 @@ import { widgets } from './gulp/tasks/styles/widgets/widgets.js';
 //? Features
 import { features } from './gulp/tasks/styles/features/features.js';
 //? Custom
+import { addShared } from './gulp/tasks/custom/addShared.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
@@ -100,3 +101,4 @@ export { build };
 // Выполнение сценария по умолчанию
 gulp.task('default', dev);
 gulp.task('build', build);
+gulp.task('add-s', addShared);
