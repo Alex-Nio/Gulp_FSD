@@ -40,6 +40,7 @@ import { features } from './gulp/tasks/styles/features/features.js';
 import { addShared } from './gulp/tasks/custom/addShared.js';
 import { addFeature } from './gulp/tasks/custom/addFeature.js';
 import { addWidget } from './gulp/tasks/custom/addWidget.js';
+import { addPage } from './gulp/tasks/custom/addPage.js';
 
 // Наблюдатель за изменениями в файлах
 function watcher() {
@@ -108,3 +109,4 @@ gulp.task('build', build);
 gulp.task('add-s', addShared); // add-s --folder --component-name //* Создает shared компонент
 gulp.task('add-f', addFeature); // add-f --feature-name //* Создает feature
 gulp.task('add-w', addWidget); // add-w --widget-name //* Создает widget
+gulp.task('add-p', addPage); // add-p --page-name //* Создает page

@@ -5,8 +5,11 @@ const { getElementHeight } = fn;
 const handlers = () => {
   const header = document.querySelector('.header');
   const pageWrapper = document.querySelector('.page');
-  let headerHeight = getElementHeight(header);
-  pageWrapper.style.marginTop = headerHeight + 'px';
+
+  if (header) {
+    let headerHeight = getElementHeight(header);
+    pageWrapper.style.marginTop = headerHeight + 'px';
+  }
 };
 
 handlers();

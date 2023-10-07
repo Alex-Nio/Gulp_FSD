@@ -18,6 +18,16 @@ $main: #c0bcbc;
 $black: #2a2d32;
 $white: #ffffff;
 
+//? Numbered colors
+$primary-100: #1f1d2b;
+$primary-200: #262434;
+$primary-300: #ffffff;
+$primary-400: #8b97ae;
+$primary-500: #6946e8;
+$primary-600: #8766ff;
+$primary-700: #db6ab5;
+$primary-800: #2d2b3e;
+
 //? Состояния
 // $normal: #0a615c;
 $hover: #1253b5;
@@ -52,7 +62,7 @@ $header-z-index: 55;
 $base_fz: 16px; //? Размер шрифта по умолчанию 16px
 $base_ff: 'ubuntu-regular', sans-serif; //? Шрифт по умолчанию
 $base_hover: $hover; //? Цвет hover по умолчанию
-$base_bg: $main; //? Цвет фона по умолчанию
+$base_bg: $primary-100; //? Цвет фона по умолчанию
 $base_color: $black; //? Цвет текста по умолчанию
 
 //! Направление right-to-left или left-to-right

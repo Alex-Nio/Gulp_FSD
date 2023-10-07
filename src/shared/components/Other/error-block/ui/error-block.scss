@@ -1,0 +1,26 @@
+@import './../consts/consts.scss';
+
+.error-block {
+  // .error-block__inner
+  &__inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 764px;
+  }
+
+  // .error-block__link
+  &__link {
+    position: absolute;
+    bottom: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    font-family: $ff_Rr;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: underline;
+    color: $white;
+  }
+}
