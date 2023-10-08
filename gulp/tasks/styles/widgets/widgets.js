@@ -112,7 +112,7 @@ const findWidgetHtml = () => {
     let match;
     while ((match = importPattern.exec(fileContents)) !== null) {
       const importPath = match[2]; // Получаем путь из импорта
-      const widgetName = importPath.match(/\/([^/]+)\/api$/); // Извлекаем часть пути
+      const widgetName = importPath.match(/\/([^/]+)\/api|api.js$/); // Извлекаем часть пути
 
       if (widgetName) {
         const widget = widgetName[1];

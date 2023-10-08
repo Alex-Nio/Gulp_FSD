@@ -99,6 +99,7 @@
     "webpack-stream": "^7.0.0"
   },
   "dependencies": {
+    "chroma-js": "^2.4.2",
     "swiper": "^10.1.0"
   }
 }

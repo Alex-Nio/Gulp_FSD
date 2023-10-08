@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru">
-@@include('widgets/head/_widget/head.html', { 'title': 'Главная', 'css': 'index' })
+@@include('widgets/head/_widget/head.html', { 'title': 'Главная', 'css': 'main' })
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <body>
+
   <div class="full-wrapper">
     @@include('widgets/header/_widget/header.html')
 
     <main class="page">
-      <div class="page__container">
-        <p>Page content1</p>
-      </div>
+      @@include('widgets/palette-generator/_widget/palette-generator.html')
     </main>
   </div>
   <!-- page scripts -->

@@ -1,0 +1,10 @@
+@import './../palette-item/ui/palette-item.scss';
+
+.palette-generator {
+  // .palette-generator__list
+  &__list {
+    display: flex;
+    width: 100vw;
+    min-height: 100dvh;
+  }
+}

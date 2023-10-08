@@ -13,13 +13,31 @@
     gap: 20px;
     padding: 12px 0;
   }
+}
 
-  h3 {
-    font-size: 22px;
-    font-weight: bold;
-    padding: 10px 0;
-    background-color: #000;
-    color: white;
-    text-align: center;
+.header-content {
+  // .header-content__inner
+  &__inner {
+    display: flex;
+    gap: 60px;
+
+    a {
+      display: inline-flex;
+      padding: 0 25px;
+      border-radius: 5px;
+      background-color: #000;
+      cursor: pointer;
+    }
+
+    h3 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+    }
   }
 }

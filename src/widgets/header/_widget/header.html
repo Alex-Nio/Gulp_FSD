@@ -1,10 +1,20 @@
 <header class="header">
   <div class="header__container">
-    <h3>Hello Im header in Main Page</h3>
     <div class="header__inner">
-      @@include('widgets/header/header-actions/ui/header-actions.html')
-      @@include('widgets/header/header-cart/ui/header-cart.html')
-      @@include('features/counter/_feature/counter.html')
+      <!-- content -->
+      <div class="header-content">
+        <div class="header-content__inner">
+          <a href="/">
+            <h3>Main</h3>
+          </a>
+          <!-- component wrapper -->
+          <div class="included-component">
+            <div class="included-component__inner">
+              @@include('features/counter/_feature/counter.html')
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
